@@ -22,7 +22,8 @@ def pregunta_01():
     40
 
     """
-    return
+    row_count = len(tbl0)
+    return row_count
 
 
 def pregunta_02():
@@ -33,7 +34,8 @@ def pregunta_02():
     4
 
     """
-    return
+    column_count = len(tbl0.columns)
+    return column_count
 
 
 def pregunta_03():
