@@ -174,14 +174,27 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    tabla_c1 = (
-        tbl0.groupby("_c1")["_c2"]
-        .apply(lambda x: ":".join(map(str, sorted(x))))
-        .reset_index()
-    )
-    tabla_c1 = tabla_c1.set_index("_c1")
-    tabla_c1.columns = ["_c2"]
-    return tabla_c1
+    columnas_c1c2 = tbl0.iloc[:,[1,2]]
+    tuplas = [tuple(x) for x in columnas_c1c2.to_records(index=False)]
+    sorted_tupla = sorted(tuplas, key=lambda x: x[0])
+
+    diccionario={}
+    for key, value in sorted_tupla:
+        if key not in diccionario.keys():
+            diccionario[key]=[]
+        diccionario[key].append(value)
+                
+    new_sequence=[]
+    for key, value in diccionario.items():
+        tupla=(key, value)
+        new_sequence.append(tupla)
+
+    sorted_data = [(key, sorted(values)) for key, values in new_sequence]
+    formatted_data = [(key, ':'.join(map(str, values))) for key, values in sorted_data]
+
+    valores = pd.DataFrame(formatted_data)
+    valores.columns = ['_c0','_c1']
+    return valores
 
 
 def pregunta_11():
