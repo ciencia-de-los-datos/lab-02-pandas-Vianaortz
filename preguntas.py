@@ -8,6 +8,8 @@ Utilice los archivos `tbl0.tsv`, `tbl1.tsv` y `tbl2.tsv`, para resolver las preg
 
 """
 import pandas as pd
+import preguntas
+
 
 tbl0 = pd.read_csv("tbl0.tsv", sep="\t")
 tbl1 = pd.read_csv("tbl1.tsv", sep="\t")
@@ -174,28 +176,20 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    columnas_c1c2 = tbl0.iloc[:,[1,2]]
-    tuplas = [tuple(x) for x in columnas_c1c2.to_records(index=False)]
-    sorted_tupla = sorted(tuplas, key=lambda x: x[0])
-
-    diccionario={}
-    for key, value in sorted_tupla:
-        if key not in diccionario.keys():
-            diccionario[key]=[]
-        diccionario[key].append(value)
-                
-    new_sequence=[]
-    for key, value in diccionario.items():
-        tupla=(key, value)
-        new_sequence.append(tupla)
-
-    sorted_data = [(key, sorted(values)) for key, values in new_sequence]
-    formatted_data = [(key, ':'.join(map(str, values))) for key, values in sorted_data]
-
-    valores = pd.DataFrame(formatted_data)
-    valores.columns = ['_c0','_c1']
-    return valores
-
+    assert preguntas.pregunta_10().equals(
+        pd.DataFrame(
+            {
+                "_c2": [
+                    "1:1:2:3:6:7:8:9",
+                    "1:3:4:5:6:8:9",
+                    "0:5:6:7:9",
+                    "1:2:3:5:5:7",
+                    "1:1:2:3:3:4:5:5:5:6:7:8:8:9",
+                ]
+            },
+            index=pd.Series(["A", "B", "C", "D", "E"], name="_c1"),
+        )
+    )
 
 def pregunta_11():
     """
