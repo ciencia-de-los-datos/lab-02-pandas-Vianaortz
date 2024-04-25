@@ -53,9 +53,10 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    max = tbl0.groupby('_c1')['_c2'].count()
-    return max
-
+    frecuencia_letras = tbl0['_c1'].value_counts().sort_index()
+    frecuencia_letras.name = '_c1'
+    frecuencia_letras.index.name = None
+    return frecuencia_letras
 
 def pregunta_04():
     """
@@ -173,11 +174,14 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    df = tbl0.sort_values(by='_c2', ascending=True)
-    df = df.groupby("_c1")["_c2"].apply(lambda x: ":".join(x.astype(str))).reset_index()
-    df = df.set_index('_c1', inplace=False)
-
-    return df
+    tabla_c1 = (
+        tbl0.groupby("_c1")["_c2"]
+        .apply(lambda x: ":".join(map(str, sorted(x))))
+        .reset_index()
+    )
+    tabla_c1 = tabla_c1.set_index("_c1")
+    tabla_c1.columns = ["_c2"]
+    return tabla_c1
 
 
 def pregunta_11():
@@ -215,11 +219,14 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    tbl2.sort_values(by='_c5a', inplace=True)
-    tbl2['combined'] = tbl2['_c5a'] + ':' + tbl2['_c5b'].astype(str)
-    tbl2_grouped = tbl2.groupby('_c0')['combined'].apply(lambda x: ','.join(x)).reset_index()
-    tbl2_c5 = ['_c0', '_c5']
-    return tbl2_c5
+    tbl2["_c5"] = tbl2["_c5a"] + ":" + tbl2["_c5b"].astype(str)
+    agroups = (
+        tbl2.groupby("_c0")["_c5"].apply(lambda x: ",".join(sorted(x))).reset_index()
+    )
+    agrupados_columns = ["_c0", "_c5"]
+    return agroups
+
+
 
 
 def pregunta_13():
